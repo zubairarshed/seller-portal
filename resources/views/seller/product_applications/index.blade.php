@@ -3,7 +3,7 @@
 @section('title', 'My Product Applications')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">My Product Applications</h1>
+    <h1 class="text-2xl font-bold mb-4">My Product Applications (both Pending and Approved)</h1>
 
     <a href="{{ route('seller.product_applications.create') }}"
        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
@@ -39,7 +39,8 @@
                                class="text-yellow-600 hover:underline">Edit</a>
                             <form action="{{ route('seller.product_applications.destroy', $app) }}" 
                                   method="POST" onsubmit="return confirm('Delete this application?')">
-                                @csrf @method('DELETE')
+                                @csrf 
+                                @method('DELETE')
                                 <button class="text-red-600 hover:underline">Delete</button>
                             </form>
                         @endif

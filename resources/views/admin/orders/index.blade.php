@@ -31,7 +31,7 @@
         <thead>
             <tr class="bg-gray-100 text-left">
                 <th class="px-4 py-2">Order ID</th>
-                <th class="px-4 py-2">Seller</th>
+                <th class="px-4 py-2">Sellers</th>
                 <th class="px-4 py-2">Buyer</th>
                 <th class="px-4 py-2">Total Price</th>
                 <th class="px-4 py-2">Status</th>
@@ -42,14 +42,23 @@
             @forelse($orders as $order)
                 <tr class="border-b">
                     <td class="px-4 py-2">{{ $order->id }}</td>
-                    <td class="px-4 py-2">{{ $order->seller->name }}</td>
+
+                    <!-- ✅ Show all sellers for this order -->
+                    <td class="px-4 py-2">
+                        @foreach($order->items->pluck('seller')->unique('id') as $seller)
+                            <span class="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded text-sm mr-1">
+                                {{ $seller->name }}
+                            </span>
+                        @endforeach
+                    </td>
+
                     <td class="px-4 py-2">{{ $order->buyer_name }}</td>
                     <td class="px-4 py-2">${{ number_format($order->total_price, 2) }}</td>
                     <td class="px-4 py-2 capitalize">{{ $order->status }}</td>
                     <td class="px-4 py-2 flex space-x-2">
                         <a href="{{ route('admin.orders.show', $order) }}" 
                            class="text-indigo-600 hover:underline">View</a>
-                    </td>
+                    </td>   
                 </tr>
             @empty
                 <tr>

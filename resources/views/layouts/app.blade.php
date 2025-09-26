@@ -16,10 +16,6 @@
 
                 @auth
                     @if(Auth::user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-indigo-600 hover:underline">
-                            Admin Dashboard
-                        </a>
-
                         <!-- Manage Sellers Dropdown -->
                         <div class="relative group">
                             <button class="px-4 py-2 text-indigo-600 hover:underline">
@@ -69,7 +65,7 @@
                                         transition-all duration-200 ease-in-out">
                                 <a href="{{ route('admin.orders.index') }}" 
                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    View All Orders
+                                    All Orders
                                 </a>
                             </div>
                         </div>
@@ -82,6 +78,9 @@
                         <a href="{{ route('seller.product_applications.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
                             Products
                         </a>
+                        <a href="{{ route('seller.orders.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
+                            Orders
+                        </a>
                     @endif
                 @endauth
             </div>
@@ -89,7 +88,7 @@
             <!-- RIGHT SIDE: Auth Controls -->
             <div class="flex items-center space-x-4">
                 @guest
-                    <a href="{{ route('seller.register') }}" class="px-4 py-2 text-indigo-600 hover:underline">Register</a>
+                    <a href="{{ route('seller.register') }}" class="px-4 py-2 text-indigo-600 hover:underline">Sellers, Register Here</a>
                     <a href="{{ route('login') }}" class="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700">Login</a>
                 @endguest
 
@@ -97,6 +96,8 @@
                     <span class="mr-3">Hi, {{ Auth::user()->name }}</span>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
+                        @method('DELETE')
+                        
                         <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">
                             Logout
                         </button>

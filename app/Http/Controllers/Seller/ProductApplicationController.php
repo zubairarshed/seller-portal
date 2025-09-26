@@ -13,18 +13,15 @@ class ProductApplicationController extends Controller
     /**
      * Show all product applications submitted by this seller
      */
-    public function index()
-    {
+    public function index() {
         $applications = ProductApplication::where('seller_id', Auth::id())->latest()->get();
-
         return view('seller.product_applications.index', compact('applications'));
     }
 
     /**
      * Show form to create a new product application
      */
-    public function create()
-    {
+    public function create() {
         return view('seller.product_applications.create');
     }
 
@@ -72,10 +69,8 @@ class ProductApplicationController extends Controller
     /**
      * Show details of a single product application
      */
-    public function show(ProductApplication $productApplication)
-    {
+    public function show(ProductApplication $productApplication) {
         $this->authorizeApplication($productApplication);
-
         return view('seller.product_applications.show', compact('productApplication'));
     }
 

@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function create()
-    {
+    public function create() {
         return view('login');
     }
 
@@ -19,8 +18,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials))
-        {
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
             if ($user->role !== $request->role)
@@ -36,6 +34,6 @@ class AuthController extends Controller
     public function destroy()
     {
         Auth::logout();
-        return redirect('/')->with('message', 'Logged out successfully.');
+        return redirect('/login')->with('message', 'Logged out successfully.');
     }
 }

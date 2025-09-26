@@ -12,15 +12,10 @@ class SellerApplicationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         $applications = SellerApplication::where('status', 'pending')->get();
         return view('admin.seller_applications.index', compact('applications'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
 
     public function approve($id)
     {
@@ -45,57 +40,10 @@ class SellerApplicationController extends Controller
     {
         $application = SellerApplication::findOrFail($id);
 
-        // Delete application
         $application->update([
             'status' => 'rejected'
         ]);
 
         return redirect()->back()->with('message', 'Seller application rejected');
-    }
-
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
