@@ -15,12 +15,28 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Seller\NotificationController;
+// use Illuminate\Support\Facades\App;
+// use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
+
+// Route::get('lang/{locale}', function ($locale) {
+//     if (in_array($locale, ['en', 'zh'])) {
+//         Session::put('locale', $locale);
+//         App::setLocale($locale);
+//     }
+
+//     return redirect()->back();
+// })->name('lang.switch');
+
+Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']) // ✅
+     ->name('notifications.read');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');    // ✅
 
 // Cart
@@ -65,6 +81,10 @@ Route::prefix('seller')->name('seller.')->group(function () {
 
         // Orders
         Route::get('orders', [SellerOrderController::class, 'index'])->name('orders.index');    // ✅
+
+        // Payouts
+        Route::get('payouts', [App\Http\Controllers\Seller\PayoutController::class, 'index'])   // ✅
+            ->name('payouts.index');
     });
 });
 
@@ -107,5 +127,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::patch('{order}/cancel', [AdminOrderController::class, 'cancel'])->name('cancel'); // ✅
         Route::patch('{order}/refund', [AdminOrderController::class, 'refund'])->name('refund'); // ✅
         Route::patch('{order}/complete', [AdminOrderController::class, 'complete'])->name('complete'); // ✅
+    });
+
+    // Payouts
+    Route::prefix('payouts')->name('payouts.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\PayoutController::class, 'index'])->name('index'); // ✅
+        Route::post('{seller}/pay', [App\Http\Controllers\Admin\PayoutController::class, 'pay'])->name('pay'); // ✅
+        Route::get('export/csv', [App\Http\Controllers\Admin\PayoutController::class, 'exportCsv'])->name('export.csv'); // ✅
+        Route::get('export/pdf', [App\Http\Controllers\Admin\PayoutController::class, 'exportPdf'])->name('export.pdf'); // ✅
     });
 });

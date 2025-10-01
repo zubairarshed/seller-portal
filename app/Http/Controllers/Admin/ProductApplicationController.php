@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ProductApplication;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Notifications\ProductApplicationStatus;
 
 class ProductApplicationController extends Controller
 {
@@ -88,7 +89,12 @@ class ProductApplicationController extends Controller
             ]);
         }
 
-        // 4. Redirect back with success message
+        // 4. Notify the Seller
+        $application->seller->notify(
+            new ProductApplicationStatus('approved', $product)
+        );
+
+        // 5. Redirect back with success message
         return redirect()
             ->route('admin.product_applications.index')
             ->with('message', 'Product application approved and product created successfully.');
@@ -100,6 +106,11 @@ class ProductApplicationController extends Controller
     public function reject(string $id) {
         $application = ProductApplication::findOrFail($id);
         $application->update(['status' => 'rejected']);
+
+        // Notify the Seller
+        $application->seller->notify(
+            new ProductApplicationStatus('rejected', $application)
+        );
 
         return redirect()->route('admin.product_applications.index')
                          ->with('message', 'Application rejected successfully.');

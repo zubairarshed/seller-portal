@@ -37,19 +37,24 @@
     </table>
 
     <div class="mt-6 flex space-x-3">
-        @if($order->status === 'pending')
+        @if(in_array($order->status, ['pending', 'completed']))
+            {{-- Cancel --}}
             <form action="{{ route('admin.orders.cancel', $order) }}" method="POST">
                 @csrf
                 @method('PATCH')
                 <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Cancel Order</button>
             </form>
 
-            <form action="{{ route('admin.orders.complete', $order) }}" method="POST">
-                @csrf
-                @method('PATCH')
-                <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Complete Order</button>
-            </form>
+            {{-- Complete (only show if still pending) --}}
+            @if($order->status === 'pending')
+                <form action="{{ route('admin.orders.complete', $order) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Complete Order</button>
+                </form>
+            @endif
 
+            {{-- Refund --}}
             <form action="{{ route('admin.orders.refund', $order) }}" method="POST">
                 @csrf
                 @method('PATCH')
@@ -58,6 +63,7 @@
         @endif
 
         <a href="{{ route('admin.orders.index') }}" 
-           class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Back to Orders</a>
+        class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Back to Orders</a>
     </div>
+
 @endsection

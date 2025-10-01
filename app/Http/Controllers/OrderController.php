@@ -4,12 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function create()
     {
+        $cart = session()->get('cart', []);
+
+        // Check Inventory for each product before creating Order
+        foreach ($cart as $productId => $item) {
+            $product = Product::findOrFail($productId);
+
+            if ($product->inventory < $item['quantity']) {
+                return redirect()->route('cart.index')
+                    ->with('error', "Not Enough stock for {$product->title}. Only {$product->inventory} left.");
+            }
+        }
+
         $cart = session()->get('cart', []);
         return view('checkout.index', compact('cart'));
     }
@@ -34,6 +47,8 @@ class OrderController extends Controller
             'address' => 'required|string|max:500',
         ]);
 
+        
+
         // Calculate total
         $grandTotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
 
@@ -49,13 +64,18 @@ class OrderController extends Controller
 
         // Create order items
         foreach ($cart as $productId => $item) {
-            OrderItem::create([
+            $orderItem = OrderItem::create([
                 'order_id'   => $order->id,
                 'product_id' => $productId,
                 'quantity'   => $item['quantity'],
                 'price'      => $item['price'],
                 'seller_id'  => $item['seller_id']
             ]);
+
+            $product = Product::findOrFail($productId);
+            
+            // Deduct inventory
+            $product->decrement('inventory', $orderItem->quantity);
         }
 
         // Clear the cart

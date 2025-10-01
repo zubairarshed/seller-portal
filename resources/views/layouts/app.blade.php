@@ -55,7 +55,6 @@
                         </div>
 
                         <!-- Manage Orders Dropdown -->
-                         <!-- Manage Products Dropdown -->
                         <div class="relative group">
                             <button class="px-4 py-2 text-indigo-600 hover:underline">
                                 Manage Orders
@@ -70,16 +69,24 @@
                             </div>
                         </div>
 
+                        <!-- Manage Payouts Dropdown -->
+                        <a href="{{ route('admin.payouts.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
+                            Payouts
+                        </a>
+
 
                     @elseif(Auth::user()->role === 'seller')
                         <a href="{{ route('seller.dashboard') }}" class="px-4 py-2 text-indigo-600 hover:underline">
-                            Dashboard
+                        {{ __('Dashboard') }}
                         </a>
                         <a href="{{ route('seller.product_applications.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
-                            Products
+                        {{ __('Products') }}
                         </a>
                         <a href="{{ route('seller.orders.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
-                            Orders
+                        {{ __('Orders') }}
+                        </a>
+                        <a href="{{ route('seller.payouts.index') }}" class="px-4 py-2 text-indigo-600 hover:underline">
+                        {{ __('Payouts') }}
                         </a>
                     @endif
                 @endauth
@@ -93,6 +100,8 @@
                 @endguest
 
                 @auth
+                    
+
                     <span class="mr-3">Hi, {{ Auth::user()->name }}</span>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf

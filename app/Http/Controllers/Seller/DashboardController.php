@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SellerBalance;
 
 class DashboardController extends Controller
 {
@@ -18,12 +19,8 @@ class DashboardController extends Controller
             ->distinct('order_id')
             ->count('order_id');
 
-        $earnings = $seller->orderItems()
-            ->whereHas('order', function ($q) {
-                $q->where('status', 'completed');
-            })
-            ->sum(\DB::raw('quantity * price'));
+        $balance = SellerBalance::where('seller_id', auth()->id())->first();
 
-        return view('seller.dashboard', compact('productsCount', 'ordersCount', 'earnings'));
+        return view('seller.dashboard', compact('productsCount', 'ordersCount', 'balance'));
     }
 }

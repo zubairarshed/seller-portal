@@ -12,6 +12,12 @@
             {{ session('success') }}
         </div>
     @endif
+    {{-- Error message --}}
+    @if(session('error'))
+        <div class="bg-red-100 text-red-700 border border-red-300 rounded p-3 mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
 
     @if(count($cart) > 0)
         <div class="overflow-x-auto bg-white shadow rounded-lg">
